@@ -518,7 +518,10 @@ body.shelforder > div.container-fluid > div.row-fluid > div.col-sm-10:before {
 
 #archived_form {
     display: inline-block;
-    float: left
+    float: left;
+    background-image: url("/static/img/Archookieves.png");
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #archived_form > label {
@@ -568,12 +571,12 @@ body.shelforder > div.container-fluid > div.row-fluid > div.col-sm-10:before {
 }
 
 #archived_cb:checked + label:before {
-    content: "\e020";
+    content: "";
     color: var(--color-primary)
 }
 
 #archived_cb + label:before {
-    content: "\e020";
+    content: "";
     color: hsla(0, 0%, 100%, .7)
 }
 

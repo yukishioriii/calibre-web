@@ -108,7 +108,6 @@ def add_security_headers(resp):
 
 
 web = Blueprint('web', __name__)
-
 log = logger.create()
 
 
@@ -1532,7 +1531,7 @@ def profile():
 @viewer_required
 def read_book(book_id, book_format):
     book = calibre_db.get_filtered_book(book_id)
-
+    log.debug("what's up")
     if not book:
         flash(_("Oops! Selected book is unavailable. File does not exist or is not accessible"),
               category="error")
@@ -1552,7 +1551,13 @@ def read_book(book_id, book_format):
         return render_title_template('read.html', bookid=book_id, title=book.title, bookmark=bookmark)
     elif book_format.lower() == "pdf":
         log.debug("Start pdf reader for %d", book_id)
-        return render_title_template('readpdf.html', pdffile=book_id, title=book.title)
+        is_mobile = any(x in request.headers["User-Agent"].lower() for x in ["ipad", "android"])
+        if is_mobile:
+            return render_title_template('readpdf.html', pdffile=book_id, title=book.title)
+        else:
+            data = calibre_db.get_book_format(book_id, book_format.upper())
+            return send_from_directory(os.path.join(config.config_calibre_dir, book.path), data.name + "." + book_format)
+
     elif book_format.lower() == "txt":
         log.debug("Start txt reader for %d", book_id)
         return render_title_template('readtxt.html', txtfile=book_id, title=book.title)
